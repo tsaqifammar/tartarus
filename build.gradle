@@ -1,0 +1,71 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+group = 'io.github.tsaqifammar'
+version = System.getenv('VERSION')
+
+repositories {
+    maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/abcqwq/magia-injection")
+        credentials {
+            username = project.findProperty("github_user") ?: System.getenv("GITHUB_USER")
+            password = project.findProperty("github_token") ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
+    mavenCentral()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_24
+    targetCompatibility = JavaVersion.VERSION_24
+}
+
+dependencies {
+
+    def lombokVersion = "1.18.38"
+
+    // web
+    implementation 'com.sparkjava:spark-core:2.9.4'
+
+    // common utils
+    implementation 'org.apache.commons:commons-lang3:3.18.0'
+    implementation 'io.github.abcqwq:magia-injection:v0.0.3'
+    implementation 'com.google.code.gson:gson:2.11.0'
+    compileOnly("org.projectlombok:lombok:$lombokVersion")
+    annotationProcessor("org.projectlombok:lombok:$lombokVersion")
+
+    // logging
+    implementation 'org.slf4j:slf4j-api:2.0.17'
+    runtimeOnly 'ch.qos.logback:logback-classic:1.5.18'
+
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testCompileOnly("org.projectlombok:lombok:$lombokVersion")
+    testAnnotationProcessor("org.projectlombok:lombok:$lombokVersion")
+}
+
+test {
+    useJUnitPlatform()
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/abcqwq/magia-injection")
+            credentials {
+                username = System.getenv("USERNAME")
+                password = System.getenv("TOKEN")
+            }
+        }
+    }
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
