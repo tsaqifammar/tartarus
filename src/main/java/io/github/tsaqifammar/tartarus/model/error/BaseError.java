@@ -1,7 +1,11 @@
 package io.github.tsaqifammar.tartarus.model.error;
 
+import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Getter
+@Builder
 @RequiredArgsConstructor
 public class BaseError {
 
